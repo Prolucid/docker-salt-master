@@ -1,3 +1,3 @@
 #!/bin/bash
 
-salt-master -l ${LOG_LEVEL}
+salt-master -d -l ${LOG_LEVEL}
