@@ -25,6 +25,19 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 #salt-api python-cherrypy3
 
 RUN cd /tmp && \
+    wget https://github.com/openssl/openssl/archive/OpenSSL_1_0_1r.tar.gz && \
+    tar xzf OpenSSL_1_0_1r.tar.gz && \
+    cd openssl-OpenSSL_1_0_1r && \
+    ./config -fPIC --prefix=/usr/local/ -ldl && \
+    make && \
+    make install && \
+    wget https://www.libssh2.org/download/libssh2-1.7.0.tar.gz && \
+    tar xzf libssh2-1.7.0.tar.gz && \
+    cd libssh2-1.7.0 && \
+    ./configure LIBS=-ldl --with-openssl --with-libz && \
+    make && \
+    make install && \
+    cd /tmp && \
     wget https://github.com/libgit2/libgit2/archive/v0.22.2.tar.gz && \
     tar xzf v0.22.2.tar.gz && \
     cd libgit2-0.22.2/ && \
