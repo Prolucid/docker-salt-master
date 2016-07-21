@@ -6,23 +6,22 @@ ENV DEBIAN_FRONTEND noninteractive
 CMD ["/sbin/my_init"]
 
 ENV DISABLE_SSH 1
-ENV SALT_VERSION 2015.8
 ENV LOG_LEVEL debug
 ENV LOG_LOCATION /var/log/salt/master
 
 RUN apt-get update && apt-get install -yq --no-install-recommends wget
-RUN echo "deb http://repo.saltstack.com/apt/ubuntu/ubuntu14/${SALT_VERSION}/ trusty main" >> /etc/apt/sources.list
-RUN wget -O - http://repo.saltstack.com/apt/ubuntu/ubuntu14/${SALT_VERSION}/SALTSTACK-GPG-KEY.pub | apt-key add -
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
-  salt-master=${SALT_VERSION}\* \ 
   git \
   pkg-config \
   gcc build-essential cmake \
   python-dev python-pip \
   libffi-dev libssh-dev zlib1g-dev libssl-dev \
-  libhttp-parser-dev virt-what
-#salt-api python-cherrypy3
+  libhttp-parser-dev virt-what \
+  python-cherrypy3
+
+RUN curl -o bootstrap_salt.sh -L https://bootstrap.saltstack.com && \
+	sh bootstrap_salt.sh -d -M -X -g https://github.com/Prolucid/salt.git git develop
 
 RUN cd /tmp && \
     wget https://github.com/openssl/openssl/archive/OpenSSL_1_0_1r.tar.gz && \
