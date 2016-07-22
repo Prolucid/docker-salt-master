@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
   git \
   pkg-config \
   gcc build-essential cmake \
-  python-dev python-pip \
+  python-setuptools python-dev python-pip \
   libffi-dev libssh-dev zlib1g-dev libssl-dev \
   libhttp-parser-dev virt-what \
   python-cherrypy3
