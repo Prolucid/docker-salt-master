@@ -12,7 +12,7 @@ ENV LOG_LOCATION /var/log/salt/master
 RUN apt-get update && apt-get install -yq --no-install-recommends wget
 
 RUN curl -o bootstrap_salt.sh -L https://bootstrap.saltstack.com && \
-	sh bootstrap_salt.sh -d -M -X -g https://github.com/Prolucid/salt.git git develop
+	sh bootstrap_salt.sh -d -M -X git v2016.11.1
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
   git \
@@ -23,31 +23,37 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
   libhttp-parser-dev virt-what \
   python-cherrypy3
 
-RUN cd /tmp && \
-    wget https://github.com/openssl/openssl/archive/OpenSSL_1_0_1r.tar.gz && \
-    tar xzf OpenSSL_1_0_1r.tar.gz && \
-    cd openssl-OpenSSL_1_0_1r && \
+RUN pip install --upgrade pip && \
+    cd /tmp && \
+    wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_0c.tar.gz && \
+    tar xzf OpenSSL_1_1_0c.tar.gz && \
+    cd openssl-OpenSSL_1_1_0c && \
     ./config -fPIC --prefix=/usr/local/ -ldl && \
     make && \
     make install && \
-    wget https://www.libssh2.org/download/libssh2-1.7.0.tar.gz && \
-    tar xzf libssh2-1.7.0.tar.gz && \
-    cd libssh2-1.7.0 && \
+    wget https://www.libssh2.org/download/libssh2-1.8.0.tar.gz && \
+    tar xzf libssh2-1.8.0.tar.gz && \
+    cd libssh2-1.8.0 && \
     ./configure LIBS=-ldl --with-openssl --with-libz && \
     make && \
     make install && \
     cd /tmp && \
-    wget https://github.com/libgit2/libgit2/archive/v0.22.2.tar.gz && \
-    tar xzf v0.22.2.tar.gz && \
-    cd libgit2-0.22.2/ && \
+    wget https://github.com/libgit2/libgit2/archive/v0.25.1.tar.gz && \
+    tar xzf v0.25.1.tar.gz && \
+    cd libgit2-0.25.1/ && \
     cmake . && \
     make && \
     make install && \
     ldconfig && \
     pip install -I cffi && \
-    pip install -I pygit2==0.22.1 && \
-    pip install -I pyOpenSSL==0.15.1 && \
+    pip install -I pygit2==0.25.0 && \
+    pip install -I pyOpenSSL==16.2.0 && \
     cd /
+
+# Install Logstash
+RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN echo "deb https://packages.elastic.co/logstash/2.3/debian stable main" | tee -a /etc/apt/sources.list
+RUN apt-get update &&  apt-get install logstash
 
 # cleanup
 RUN apt-get purge gcc -yq && \
