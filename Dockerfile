@@ -1,4 +1,4 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:0.9.19
 MAINTAINER Eugene Tolmachev 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -12,7 +12,8 @@ ENV LOG_LOCATION /var/log/salt/master
 RUN apt-get update && apt-get install -yq --no-install-recommends wget
 
 RUN curl -o bootstrap_salt.sh -L https://bootstrap.saltstack.com && \
-	sh bootstrap_salt.sh -d -M -X git v2016.11.1
+#	sh bootstrap_salt.sh -d -M -X git v2016.11.1
+	sh bootstrap_salt.sh -d -M -X -g https://github.com/Prolucid/salt.git git 2016.11
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
   git \
