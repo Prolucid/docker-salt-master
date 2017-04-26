@@ -7,6 +7,7 @@ CMD ["/sbin/my_init"]
 
 ENV DISABLE_SSH 1
 ENV LOG_LEVEL debug
+ENV LOG_FILE_LEVEL debug
 ENV LOG_LOCATION /var/log/salt/master
 
 RUN apt-get update && apt-get install -yq --no-install-recommends wget
